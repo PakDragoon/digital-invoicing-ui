@@ -1,0 +1,23 @@
+export const NOT_WORKING_TODAY_STATUS = ["OFF", "GONE FOR THE DAY", "VACATION", "SICK"]
+
+export const TEMPORARILY_UNAVAILABLE_STATUS = [
+    "BD - PHONE",
+    "MEETING",
+    "UNAVAILABLE",
+]
+
+export const ALL_SALESPERSON_STATUS = [
+  "AVAILABLE",
+  "WITH CUSTOMER",
+  "SICK",
+  "VACATION",
+  "UNAVAILABLE",
+  "MEETING",
+  "BD - PHONE",
+  "GONE FOR THE DAY",
+  "OFF",
+]
+
+export const WITH_CUSTOMER_STATUS = ["WITH CUSTOMER"]
+
+export const AVAILABLE_STATUS = ["AVAILABLE"]

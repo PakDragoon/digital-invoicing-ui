@@ -1,0 +1,10 @@
+<svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dollar Circle Icon -->
+  <circle cx="3.5" cy="4" r="1.5" stroke="#81868F" stroke-width="1.5"/>
+  <path d="M3.5 3.25V4.75" stroke="#81868F" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Queue Lines -->
+  <path d="M7 3.5H19.5" stroke="#81868F" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M7 7.5H19.5" stroke="#81868F" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M7 11.5H19.5" stroke="#81868F" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
