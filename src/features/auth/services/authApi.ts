@@ -3,7 +3,7 @@ import { IUpdateEmployee } from "@/features/auth/components/ProfileForm"
 import { ISignUpFormData } from "@/features/auth/schemas/signupSchema"
 
 export const login = async (email: string, password: string) => {
-  const isAdminEmail = email === "geraldchomer@relayauto.com"
+  const isAdminEmail = email === "admin@digitalinvoicing.com"
   const endpoint = isAdminEmail ? "/admin/auth/login" : "/employee/auth/login"
 
   const response = await api.post(endpoint, {
