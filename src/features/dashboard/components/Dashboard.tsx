@@ -3,14 +3,15 @@ import { Role } from "@/common/utils/roleUtils";
 import { JSX, Suspense, lazy } from "react";
 import { useAuthStore } from "../../auth/stores/authStore";
 import SuperAdminDashboard from "./SuperAdmin/SuperAdmin";
-const SalesManagerDashboard = lazy(() => import("./SalesManager/SalesManager"));
+const UserDashboard = lazy(() => import("./User/UserDashboard"));
 
 const Dashboard = () => {
   const { user } = useAuthStore.getState();
   const role = user?.role;
   const roleDashboardMap: Partial<Record<Role, JSX.Element>> = {
-    SalesManager: <SalesManagerDashboard />,
+    SuperAdmin: <SuperAdminDashboard />,
     Admin: <SuperAdminDashboard />,
+    User: <UserDashboard />,
   };
 
   return (

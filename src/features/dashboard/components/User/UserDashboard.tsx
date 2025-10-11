@@ -1,6 +1,6 @@
 import React from "react";
 
-const SuperAdminDashboard = () => {
+const UserDashboard = () => {
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="text-center">
@@ -11,4 +11,4 @@ const SuperAdminDashboard = () => {
   );
 };
 
-export default SuperAdminDashboard
+export default UserDashboard;

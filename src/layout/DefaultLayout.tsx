@@ -39,14 +39,9 @@ const RootLayout: React.FC = () => {
           <div ref={sidebarRef}>
               <Sidebar />
             </div>
-        {user?.role !== "Admin" && (
-          <>
-          
-            <div className="h-[62px] w-full pl-[5rem]">
-              <RoleBasedHeader />
-            </div>
-          </>
-        )}
+        <div className="h-[62px] w-full pl-[5rem]">
+          <RoleBasedHeader />
+        </div>
         <main className="flex-1 overflow-auto pb-[1.5rem] pl-[6.5rem] pr-[1.5rem] pt-[1.375rem]">
           <Outlet />
         </main>
