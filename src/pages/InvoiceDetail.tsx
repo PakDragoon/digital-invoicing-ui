@@ -30,13 +30,13 @@ function InvoiceDetail() {
   const [isCommentModal, setIsCommentModal] = React.useState(false);
   const { id } = useParams({ strict: false });
   const [dealExistsInQueue, setDealExistsInQueue] = useState(false);
-  const dealershipId = useAuthStore((state) => state.user?.dealershipId);
+  const companyId = useAuthStore((state) => state.user?.companyId);
   const role = useAuthStore((state) => state.user?.role ?? null);
   const { viewingEmployee } = useViewingEmployeeStore();
   const ViewinguserRole = viewingEmployee?.role ? viewingEmployee.role : role;
   const humanizedRole = humanize(ViewinguserRole);
   const canEditDeal = ["SalesManager", "FinanceDirector"].includes(role!);
-  const { data, isLoading, isError } = useDealDetail(id, dealershipId);
+  const { data, isLoading, isError } = useDealDetail(id, companyId);
   const {
     closeEditDeal,
     openEditDeal,
@@ -57,7 +57,7 @@ function InvoiceDetail() {
     ? getDashboardRouteByRole(viewingEmployee.role)
     : getDashboardRouteByRole(role);
 
-  const { data: routeOneData } = useRouteOneByVin(dealershipId, vin);
+  const { data: routeOneData } = useRouteOneByVin(companyId, vin);
 
   const toggleCommentModal = () => setIsCommentModal((prev) => !prev);
 
@@ -79,7 +79,7 @@ function InvoiceDetail() {
   const shouldCheckQueue =
     dealDetail?.financeManagerId === "" && role === "SalesManager";
   const { data: dealExistsInAssignQueue } = useDealInAssignQueue(
-    dealershipId,
+    companyId,
     dealId,
     {
       enabled: shouldCheckQueue,

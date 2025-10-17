@@ -10,7 +10,7 @@ interface FetchDealsParams {
   sortBy?: string
   sortOrder?: "asc" | "desc"
   filters?: Record<string, string>
-  dealershipId: string
+  companyId: string
   salesType?: SalesType
   userId: string
   viewAsRole: string
@@ -39,7 +39,7 @@ export const fetchDeals = async (
     sortBy,
     sortOrder,
     filters = {},
-    dealershipId,
+    companyId,
     salesType,
     userId,
     viewAsRole,
@@ -48,7 +48,7 @@ export const fetchDeals = async (
 
   const { data } = await api.get(endpoint, {
     params: {
-      dealershipId,
+      companyId,
       salesType,
       skip,
       limit,
@@ -65,17 +65,16 @@ export const fetchDeals = async (
   return data
 }
 
-const fetchSalesPersons = async (dealershipId: string): Promise<User[]> => {
-  const { data } = await api.get("/employee/salespersons", { params: { dealershipId } })
+const fetchSalesPersons = async (companyId: string): Promise<User[]> => {
+  const { data } = await api.get("/employee/salespersons", { params: { companyId } })
   return data
 }
 
 export const fetchEmployeeStatusByRole = async (
   roleId: string,
   companyId?: string,
-  dealershipId?: string
 ) => {
-  const { data } = await api.get("/status/status", { params: { dealershipId, roleId, companyId } })
+  const { data } = await api.get("/status/status", { params: { companyId, roleId } })
   return data
 }
 
@@ -94,21 +93,21 @@ export const useTableData = (
   })
 }
 
-export const useGetSalesPersons = (dealershipId?: string | number) => {
+export const useGetSalesPersons = (companyId?: string | number) => {
   return useQuery({
-    queryKey: ["GetSalesPersons", dealershipId],
-    queryFn: () => fetchSalesPersons(dealershipId),
-    enabled: !!dealershipId,
+    queryKey: ["GetSalesPersons", companyId],
+    queryFn: () => fetchSalesPersons(companyId),
+    enabled: !!companyId,
     keepPreviousData: true,
     staleTime: 1000 * 60 * 60,
     cacheTime: 1000 * 60 * 300,
   })
 }
 
-export const useEmployeeStatus = (roleId: string, companyId?: string, dealershipId?: string) => {
+export const useEmployeeStatus = (roleId: string, companyId?: string) => {
   return useQuery({
-    queryKey: ["employeeStatus", roleId, companyId, dealershipId],
-    queryFn: () => fetchEmployeeStatusByRole(roleId, companyId, dealershipId),
+    queryKey: ["employeeStatus", roleId, companyId, companyId],
+    queryFn: () => fetchEmployeeStatusByRole(roleId, companyId),
     enabled: !!roleId,
   })
 }

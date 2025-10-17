@@ -1,7 +1,6 @@
 export interface CustomerVisitEntity {
   id: bigint
   companyId: bigint
-  dealershipId: bigint
   customerId: bigint
   source: string
   location: string

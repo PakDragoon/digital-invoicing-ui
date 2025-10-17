@@ -81,7 +81,7 @@ const SalesManagerDashboardContent = ({ statusInfo, objectivesData }: SalesDashb
 }
 
 const SalesManagerDashboard = () => {
-  const dealershipId = useAuthStore((state) => state.user?.dealershipId ?? "")
+  const companyId = useAuthStore((state) => state.user?.companyId ?? "")
   const userId = useAuthStore((state) => state.user?.id ?? "")
   const role = useAuthStore((state) => state.user?.role ?? "")
   const { viewingEmployee } = useViewingEmployeeStore()
@@ -99,12 +99,12 @@ const SalesManagerDashboard = () => {
     data: statusInfo,
     isLoading: isStatusInfoLoading,
     error: statusInfoError,
-  } = useSalesManagerSummary({ userId: id, dealershipId, salesType: selectedSalesType.value })
+  } = useSalesManagerSummary({ userId: id, companyId, salesType: selectedSalesType.value })
   const {
     data: objectivesData,
     isLoading: isObjectivesLoading,
     error: objectivesError,
-  } = useObjectives(id ?? "", dealershipId ? String(dealershipId) : "", selectedSalesType.value)
+  } = useObjectives(id ?? "", companyId ? String(companyId) : "", selectedSalesType.value)
 
   if (isStatusInfoLoading || isObjectivesLoading) return <FullPageLoader />
 

@@ -11,7 +11,7 @@ type Props = {
 
 const NotificationDetailsModal: React.FC<Props> = ({ type, id, onClose }) => {
   const { user } = useAuthStore.getState();
-  const dealershipId = user?.dealershipId;
+  const companyId = user?.companyId;
   const [modalData, setModalData] = React.useState(null);
 
   useEffect(() => {
@@ -23,8 +23,8 @@ const NotificationDetailsModal: React.FC<Props> = ({ type, id, onClose }) => {
       try {
         const response =
           type === "make-ready"
-            ? await makeReadyApi.getMakeReadyById(idStr, dealershipId!)
-            : await customerVisitApi.getVisitById(idStr, dealershipId!);
+            ? await makeReadyApi.getMakeReadyById(idStr, companyId!)
+            : await customerVisitApi.getVisitById(idStr, companyId!);
 
         if (response?.data) {
           setModalData(response.data);

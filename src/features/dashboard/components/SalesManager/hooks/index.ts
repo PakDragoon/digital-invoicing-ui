@@ -53,30 +53,30 @@ interface ApiResponse {
 
 interface UseSalesManagerSummaryParams {
   userId: string
-  dealershipId: string
+  companyId: string
   salesType: string
 }
 
 const fetchSalesManagerSummary = async ({
   userId,
-  dealershipId,
+  companyId,
   salesType,
 }: UseSalesManagerSummaryParams): Promise<ISalesManagerSummary> => {
   const response = await api.get<ApiResponse>(`/summary/salesmanager`, {
-    params: { userId, dealershipId, salesType },
+    params: { userId, companyId, salesType },
   })
   return response.data.data
 }
 
 export const useSalesManagerSummary = ({
   userId,
-  dealershipId,
+  companyId,
   salesType,
 }: UseSalesManagerSummaryParams) => {
   return useQuery<ISalesManagerSummary, Error>({
-    queryKey: ["salesManagerSummary", userId, salesType, dealershipId],
-    queryFn: () => fetchSalesManagerSummary({ userId, dealershipId, salesType }),
-    enabled: !!userId && !!dealershipId,
+    queryKey: ["salesManagerSummary", userId, salesType, companyId],
+    queryFn: () => fetchSalesManagerSummary({ userId, companyId, salesType }),
+    enabled: !!userId && !!companyId,
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   })

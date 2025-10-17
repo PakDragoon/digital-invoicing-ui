@@ -15,11 +15,11 @@ const DEFAULT_CONFIG = {
 
 const fetchDataByRole = async (
   query: string,
-  dealershipId: string,
+  companyId: string,
   role: string,
 ) => {
   const config = DEFAULT_CONFIG;
-  return config.fetchData(query, dealershipId);
+  return config.fetchData(query, companyId);
 };
 
 const placeHolderValue = (role: string): string => {
@@ -28,8 +28,8 @@ const placeHolderValue = (role: string): string => {
 };
 
 export default function GlobalSearch() {
-  const dealershipId = useAuthStore(
-    (state) => state.user?.dealershipId?.toString() ?? "",
+  const companyId = useAuthStore(
+    (state) => state.user?.companyId?.toString() ?? "",
   );
   const role = useAuthStore((state) => state.user?.role?.toString() ?? "");
   const [search, setSearch] = useState<string>("");
@@ -48,7 +48,7 @@ export default function GlobalSearch() {
     if (!search.trim()) return;
 
     try {
-      const result = await fetchDataByRole(search, dealershipId, role);
+      const result = await fetchDataByRole(search, companyId, role);
 
       if (result.length > 0) {
         setData(result);

@@ -56,12 +56,12 @@ interface ApiResponse {
 
 const fetchDealStatus = async (
   id: string,
-  dealershipId: string,
+  companyId: string,
   token: string
 ): Promise<DealStatusData> => {
   const response = await api.get<ApiResponse>(`/summary/salesmanager`, {
     params: {
-      dealershipId,
+      companyId,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -71,10 +71,10 @@ const fetchDealStatus = async (
   return response.data.data
 }
 
-export const useSMViewInfo = (id: string, dealershipId: string, token: string) => {
+export const useSMViewInfo = (id: string, companyId: string, token: string) => {
   return useQuery({
-    queryKey: ["dealStatus", dealershipId],
-    queryFn: () => fetchDealStatus(id, dealershipId, token),
-    enabled: !!id && !!dealershipId && !!token,
+    queryKey: ["dealStatus", companyId],
+    queryFn: () => fetchDealStatus(id, companyId, token),
+    enabled: !!id && !!companyId && !!token,
   })
 }

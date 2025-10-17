@@ -17,7 +17,7 @@ const PasswordForm = () => {
     const location = useLocation()
     const searchParams = new URLSearchParams(location.search)
     const token = searchParams.get("token")
-    const dealershipId = searchParams.get("dealershipId")
+    const companyId = searchParams.get("companyId")
     const employeeId = searchParams.get("employeeId")
     const { mutate, isPending, isError, error } = useUpdatePassword();
 
@@ -38,7 +38,7 @@ const PasswordForm = () => {
             mutate(
                 {
                     payload: {
-                        dealershipId: dealershipId!,
+                        companyId: companyId!,
                         password: data.password,
                     },
                     accessToken: token!,

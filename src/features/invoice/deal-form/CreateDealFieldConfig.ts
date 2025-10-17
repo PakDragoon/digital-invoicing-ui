@@ -426,11 +426,11 @@ export const DealConfig = {
 
 // Hooks
 export const useSalespersonOptions = () => {
-  const dealershipId = useAuthStore((state) => state.user?.dealershipId?.toString() ?? "")
+  const companyId = useAuthStore((state) => state.user?.companyId?.toString() ?? "")
   const [salespersonOptions, setSalespersonOptions] = useState<Array<{ name: string; id: string }>>(
     []
   )
-  const { data: salesPersonsList } = useGetSalesPersons(dealershipId)
+  const { data: salesPersonsList } = useGetSalesPersons(companyId)
   const token = useAuthStore((state) => state.accessToken)
 
   useEffect(() => {

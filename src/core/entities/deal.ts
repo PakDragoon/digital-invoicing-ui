@@ -1,7 +1,6 @@
 export interface Deal {
   id: string
   companyId: string
-  dealershipId: string
   createdBy: string
   visitId: string
   dealershipDealNo: string

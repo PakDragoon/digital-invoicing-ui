@@ -24,8 +24,8 @@ const EditDeal: React.FC<Props> = ({ data, onClose }) => {
     {},
   );
   const dealEditFields = DealConfig.fields.deal([], true);
-  const dealershipId: string = useAuthStore(
-    (state) => state.user?.dealershipId?.toString() ?? "",
+  const companyId: string = useAuthStore(
+    (state) => state.user?.companyId?.toString() ?? "",
   );
   if (!data?.id) return null;
   const dealId = data.id.toString();
@@ -40,7 +40,7 @@ const EditDeal: React.FC<Props> = ({ data, onClose }) => {
     mutationFn: ({ status, comment }) =>
       dealService.updateAccountingStatus({
         dealId,
-        dealershipId,
+        companyId,
         status,
         comment,
       }),

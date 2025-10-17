@@ -66,10 +66,10 @@ const LoginForm = () => {
   const { user } = useAuthStore.getState()
   useEffect(() => {
     if (user) {
-      const dealershipId: string = user!.dealershipId!.toString()
+      const companyId: string = user!.companyId!.toString()
 
       if (user?.role === "FinanceManager") {
-        setFinanceInRotation(user.id, dealershipId)
+        setFinanceInRotation(user.id, companyId)
       }
     }
   }, [user])

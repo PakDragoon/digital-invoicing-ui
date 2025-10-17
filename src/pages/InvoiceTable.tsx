@@ -10,7 +10,7 @@ const tablePageName: string = "Sales"
 
 function InvoiceTable() {
   const { user } = useAuthStore.getState()
-  const dealershipId: string = user!.dealershipId!.toString()
+  const companyId: string = user!.companyId!.toString()
   const role = useAuthStore((state) => state.user?.role ?? null)
   const { viewingEmployee } = useViewingEmployeeStore()
   const ViewinguserRole = viewingEmployee?.role ? viewingEmployee.role : role
@@ -22,7 +22,7 @@ function InvoiceTable() {
   return (
     <div className="flex h-[calc(76vh-4rem)] flex-col">
       <BreadCrumb rootLabel={humanizedRole} rootPath={rootPath} />
-      <Table tabs={tabs} dealershipId={dealershipId} tablePageName={tablePageName} />
+      <Table tabs={tabs} companyId={companyId} tablePageName={tablePageName} />
     </div>
   )
 }

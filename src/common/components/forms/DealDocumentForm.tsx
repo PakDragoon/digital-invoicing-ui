@@ -19,7 +19,7 @@ const DealDocumentForm: React.FC<Props> = ({ dealId, setIsOpen }) => {
   const [loading, setLoading] = useState<boolean>(false)
   const queryClient = useQueryClient()
   const { user } = useAuthStore.getState()
-  const dealershipId = (user?.dealershipId ?? "").toString()
+  const companyId = (user?.companyId ?? "").toString()
   const {
     control,
     handleSubmit,
@@ -28,7 +28,7 @@ const DealDocumentForm: React.FC<Props> = ({ dealId, setIsOpen }) => {
     mode: "onChange",
     defaultValues: {  comment: "", docTypeId: "" },
   })
-  const { data, isLoading, isError } = useDocumentTypes(dealershipId)
+  const { data, isLoading, isError } = useDocumentTypes(companyId)
   const documentTypes = data?.map((type) => ({ id: type.id, name: type.docTypeName })) || []
   if (!isLoading && isError) toast.error("Error fetching document types")
   if (!isLoading && documentTypes.length === 0)
@@ -39,7 +39,7 @@ const DealDocumentForm: React.FC<Props> = ({ dealId, setIsOpen }) => {
       dealService.addDealDocument(dealId, docTypeId, comment),
     onSuccess: (updatedData: DealDocument) => {
       queryClient.setQueryData(
-        ["getDealDocuments", dealId, dealershipId],
+        ["getDealDocuments", dealId, companyId],
         (oldData: DealDocument[]) => {
           if (updatedData) return [...oldData, updatedData]
         }

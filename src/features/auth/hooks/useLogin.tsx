@@ -57,7 +57,6 @@ export const useLogin = () => {
                 status: user.status,
                 isAdmin: user.isAdmin,
                 companyId: user.companyId,
-                dealershipId: user.dealershipId,
                 roleId: user.roleId,
                 cometchatUid: user.cometchatUid,
                 cometchat: user.cometchat

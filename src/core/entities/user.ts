@@ -8,7 +8,6 @@ export interface User {
 export interface IEmployee {
   id: string
   companyId: string
-  dealershipId: string
   roleId: string
   email: string
   hashpass: string

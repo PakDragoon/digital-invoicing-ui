@@ -14,8 +14,7 @@ export type AuthUser = {
   roleId: string
   status: string
   isAdmin: boolean
-  companyId: boolean
-  dealershipId: string
+  companyId: string
   cometchatUid?: string
   cometchat?: {
     appId: string
@@ -58,8 +57,8 @@ export const useAuthStore = create<AuthState>()(
         useViewingEmployeeStore.getState().clearViewingEmployee()
         const { user } = get()
         if (user) {
-          const dealershipId: string = user!.dealershipId!.toString()
-          await logout(user.role, dealershipId)
+          const companyId: string = user!.companyId!.toString()
+          await logout(user.role, companyId)
         }
 
         queryClient.clear()

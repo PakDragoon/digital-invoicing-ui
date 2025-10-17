@@ -37,7 +37,6 @@ const CreatableSelectComponent = (props: IProps) => {
   const [isCreating, setIsCreating] = useState(false)
 
   const { user } = useAuthStore.getState()
-  const dealershipId = (user?.dealershipId ?? "").toString()
   const companyId = (user?.companyId ?? "").toString()
   const queryClient = useQueryClient()
 
@@ -71,7 +70,7 @@ const CreatableSelectComponent = (props: IProps) => {
       setLocalValue(inputValue)
       onChange(inputValue)
       if (create === 'dealDoc') {
-        await dealService.createDealDocumentType(inputValue, dealershipId, companyId)
+        await dealService.createDealDocumentType(inputValue, companyId)
         await queryClient.invalidateQueries({ queryKey: ["getDocumentTypes"] })
       }
     } catch (error) {

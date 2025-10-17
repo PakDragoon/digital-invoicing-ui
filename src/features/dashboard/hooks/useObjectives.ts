@@ -21,21 +21,21 @@ export interface ObjectiveInfoResponse {
 
 const fetchObjectiveInfo = async (
   id: string,
-  dealershipId: string,
+  companyId: string,
   salesType: SalesType
 ): Promise<ObjectiveInfoData> => {
   const response = await api.get<ObjectiveInfoResponse>(
     `/objective/getObjectiveInfo/${salesType}`,
-    { params: { id, dealershipId } }
+    { params: { id, companyId } }
   )
 
   return response.data.data
 }
 
-export const useObjectives = (id: string, dealershipId: string, salesType: SalesType) => {
+export const useObjectives = (id: string, companyId: string, salesType: SalesType) => {
   return useQuery({
-    queryKey: ["objectiveInfo", id, dealershipId, salesType],
-    queryFn: () => fetchObjectiveInfo(id, dealershipId, salesType),
-    enabled: !!id && !!dealershipId && !!salesType,
+    queryKey: ["objectiveInfo", id, companyId, salesType],
+    queryFn: () => fetchObjectiveInfo(id, companyId, salesType),
+    enabled: !!id && !!companyId && !!salesType,
   })
 }

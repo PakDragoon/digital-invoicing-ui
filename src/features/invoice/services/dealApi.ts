@@ -17,14 +17,14 @@ interface SalespersonOptionsResponse {
 }
 
 export const dealService = {
-  fetchDealData: async (dealNo: string, dealershipId: string, token: string) => {
+  fetchDealData: async (dealNo: string, companyId: string, token: string) => {
     try {
       const response = await api.get(`/deal/dealership/${dealNo}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         params: {
-          dealershipId,
+          companyId,
         },
       })
 
@@ -34,14 +34,14 @@ export const dealService = {
       return {}
     }
   },
-  fetchSalesperson: async (id: string, dealershipId: string, token: string) => {
+  fetchSalesperson: async (id: string, companyId: string, token: string) => {
     try {
       const response = await api.get(`/employee/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         params: {
-          dealershipId,
+          companyId,
         },
       })
       return response.data.data
@@ -59,14 +59,14 @@ export const dealService = {
 
   getRelaySalesperson: async (
     salespersonId: string | null | undefined,
-    dealershipId: string,
+    companyId: string,
     token: string
   ): Promise<any> => {
     if (!salespersonId) return ""
     try {
       const Relaysalesperson = await dealService.fetchDMSEMployee(
         salespersonId,
-        dealershipId,
+        companyId,
         token
       )
       return {
@@ -81,7 +81,7 @@ export const dealService = {
 
   getCustomer: async (
     phone: string,
-    dealershipId: string,
+    companyId: string,
     token: string | null,
     verificationId: string
   ) => {
@@ -92,7 +92,7 @@ export const dealService = {
         },
         params: {
           phone,
-          dealershipId,
+          companyId,
           verificationId,
         },
       })
@@ -102,13 +102,13 @@ export const dealService = {
       return null
     }
   },
-  getCustomerVisit: async (id: string, dealershipId: string, token: string | null) => {
+  getCustomerVisit: async (id: string, companyId: string, token: string | null) => {
     const response = await api.get(`/customer-visit/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
       params: {
-        dealershipId,
+        companyId,
       },
     })
 
@@ -116,13 +116,11 @@ export const dealService = {
   },
   saveComment: async (entityType: EntityType, entityId: string | number, commentBody: string) => {
     const { user } = useAuthStore.getState()
-    const dealershipId = (user?.dealershipId ?? "").toString()
     const companyId = (user?.companyId ?? "").toString()
     const commentToSave = {
       entityType,
       entityId: String(entityId),
       commentBody,
-      dealershipId,
       companyId,
     }
 
@@ -135,23 +133,23 @@ export const dealService = {
   },
   fetchComments: async (entityType: EntityType, entityId: string | number) => {
     const { user } = useAuthStore.getState()
-    const dealershipId = (user?.dealershipId ?? "").toString()
+    const companyId = (user?.companyId ?? "").toString()
 
     try {
-      const { data } = await api.get("/comment", { params: { entityType, entityId, dealershipId } })
+      const { data } = await api.get("/comment", { params: { entityType, entityId, companyId } })
       return data
     } catch (error) {
       console.error(`Error fetching ${entityType} comments for ID ${entityId}: `, error)
     }
   },
-  fetchDMSEMployee: async (dmsId: string, dealershipId: string, token: string) => {
+  fetchDMSEMployee: async (dmsId: string, companyId: string, token: string) => {
     try {
       const response = await api.get(`/employee/dms-employee/${dmsId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         params: {
-          dealershipId,
+          companyId,
         },
       })
 
@@ -174,7 +172,6 @@ export const dealService = {
     const certified = dealData.certified === "Certified"
     const dealToSave = {
       companyId: user?.companyId,
-      dealershipId: user?.dealershipId,
       createdBy: user?.id,
       // visitId: CustomerVisitId ?? null,
       dealershipDealNo: dealData.dealershipDealNo,
@@ -246,7 +243,7 @@ export const dealService = {
   },
   updateDeal: async (dealId: string, formData: Partial<InvoiceFormData>) => {
     const { user } = useAuthStore.getState()
-    const dealershipId = (user?.dealershipId ?? "").toString()
+    const companyId = (user?.companyId ?? "").toString()
     const businessMonth =
       formData.businessMonth === formatBusinessMonth(formData.businessMonth)
         ? formData.businessMonth
@@ -288,7 +285,7 @@ export const dealService = {
     }
 
     try {
-      const updatedData = { ...rawPayload, dealershipId }
+      const updatedData = { ...rawPayload, companyId }
       const response = await api.patch(`/deal/${dealId}`, updatedData)
       if (formData.comment) await dealService.saveComment(EntityType.Deal, dealId, formData.comment)
       return response.data.data
@@ -299,7 +296,7 @@ export const dealService = {
   },
   updateContractStatusAndDate: async (dealId: string, formData: Partial<InvoiceFormData>) => {
     const { user } = useAuthStore.getState()
-    const dealershipId = (user?.dealershipId ?? "").toString()
+    const companyId = (user?.companyId ?? "").toString()
 
     const rawPayload = {
       contractStatus: formData.contractStatus,
@@ -309,7 +306,7 @@ export const dealService = {
     }
 
     try {
-      const updatedData = { ...rawPayload, dealershipId }
+      const updatedData = { ...rawPayload, companyId }
       const response = await api.patch(`/deal/${dealId}`, updatedData)
       return response.data.data
     } catch (error) {
@@ -319,11 +316,11 @@ export const dealService = {
   },
   updateDealContractType: async (dealId: string, formData: Partial<InvoiceFormData>) => {
     const { user } = useAuthStore.getState()
-    const dealershipId = (user?.dealershipId ?? "").toString()
+    const companyId = (user?.companyId ?? "").toString()
     const rawPayload = { contractType: formData.contractType }
 
     try {
-      const updatedData = { ...rawPayload, dealershipId }
+      const updatedData = { ...rawPayload, companyId }
       const response = await api.patch(`/deal/${dealId}`, updatedData)
       return response.data.data
     } catch (error) {
@@ -333,13 +330,11 @@ export const dealService = {
   },
   updateDealStatus: async (dealId: string, dealStatus: PrismaDealStatus, gross?: number) => {
     const { user } = useAuthStore.getState()
-    const dealershipId = (user?.dealershipId ?? "").toString()
     const companyId = (user?.companyId ?? "").toString()
     const estimatedFinanceGross = parseFloat(gross) || 0
 
     const payload = {
       dealId,
-      dealershipId,
       companyId,
       dealStatus,
       ...(estimatedFinanceGross && { estimatedFinanceGross }),
@@ -355,11 +350,11 @@ export const dealService = {
   },
   getSalespersonOptions: async (): Promise<SalespersonOptionsResponse> => {
     const { user } = useAuthStore.getState()
-    const dealershipId = user?.dealershipId?.toString() ?? ""
+    const companyId = user?.companyId?.toString() ?? ""
 
     try {
       const response = await api.get("/employee/salespersons", {
-        params: { dealershipId },
+        params: { companyId },
       })
 
       const allSalespeople = response?.data?.data ?? []
@@ -379,7 +374,7 @@ export const dealService = {
     }
   },
 
-  fetchExistingDeal: async (dealNo: string, dealershipId: string, token: string) => {
+  fetchExistingDeal: async (dealNo: string, companyId: string, token: string) => {
     try {
       const dealershipDealNo = dealNo
       const response = await api.get(`/deal/dealNo/${dealershipDealNo}`, {
@@ -387,7 +382,7 @@ export const dealService = {
           Authorization: `Bearer ${token}`,
         },
         params: {
-          dealershipId,
+          companyId,
         },
       })
 
@@ -398,14 +393,14 @@ export const dealService = {
     }
   },
 
-  fetchRealDealById: async (id: string, dealershipId: string, token: string) => {
+  fetchRealDealById: async (id: string, companyId: string, token: string) => {
     try {
       const response = await api.get(`/deal/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         params: {
-          dealershipId,
+          companyId,
         },
       })
 
@@ -415,18 +410,18 @@ export const dealService = {
       throw error
     }
   },
-  fetchDocumentTypes: async (dealershipId: string) => {
+  fetchDocumentTypes: async (companyId: string) => {
     try {
-      const response = await api.get(`/deal-doc/types`, { params: { dealershipId } })
+      const response = await api.get(`/deal-doc/types`, { params: { companyId } })
       return response.data.data
     } catch (error) {
       console.error("Error fetching deal document types: ", error)
       return error
     }
   },
-  fetchDealDocuments: async (dealId: string, dealershipId: string) => {
+  fetchDealDocuments: async (dealId: string, companyId: string) => {
     try {
-      const response = await api.get(`/deal-doc/${dealId}`, { params: { dealershipId } })
+      const response = await api.get(`/deal-doc/${dealId}`, { params: { companyId } })
       return response.data.data
     } catch (error) {
       console.error("Error fetching deal documents: ", error)
@@ -435,7 +430,6 @@ export const dealService = {
   },
   addDealDocument: async (dealId: string, docTypeId: number, comment: string) => {
     const { user } = useAuthStore.getState()
-    const dealershipId = (user?.dealershipId ?? "").toString()
     const companyId = (user?.companyId ?? "").toString()
 
     const payload = {
@@ -443,50 +437,49 @@ export const dealService = {
       docTypeId,
       isReceived: false,
       companyId,
-      dealershipId,
       comment,
     }
 
     try {
-      const response = await api.post(`/deal-doc/upload`, payload, { params: { dealershipId } })
+      const response = await api.post(`/deal-doc/upload`, payload, { params: { companyId } })
       return response.data.data
     } catch (error) {
       console.error("Error adding deal document: ", error)
       throw error.response?.data?.message || error
     }
   },
-  updateDocumentStatus: async (docId: string, dealershipId: string) => {
+  updateDocumentStatus: async (docId: string, companyId: string) => {
     try {
-      const response = await api.post(`/deal-doc/receive`, { docId }, { params: { dealershipId } })
+      const response = await api.post(`/deal-doc/receive`, { docId }, { params: { companyId } })
       return response.data.data
     } catch (error) {
       console.error("Error updating deal document status: ", error)
       throw error
     }
   },
-  deleteDealDocument: async (docId: string, dealershipId: string) => {
+  deleteDealDocument: async (docId: string, companyId: string) => {
     try {
-      const response = await api.delete(`/deal-doc/${docId}`, { params: { dealershipId } })
+      const response = await api.delete(`/deal-doc/${docId}`, { params: { companyId } })
       return response.data.data
     } catch (error) {
       console.error("Error deleting deal document: ", error)
       throw error
     }
   },
-  fetchManagers: async (dealershipId: string) => {
+  fetchManagers: async (companyId: string) => {
     try {
       const response = await api.get("/finance/getAvailableFIManagers", {
-        params: { dealershipId },
+        params: { companyId },
       })
       return response.data.data
     } catch (err) {
       console.error("Error fetching finance managers", err)
     }
   },
-  fetchSalesPerson: async (dealershipId: string) => {
+  fetchSalesPerson: async (companyId: string) => {
     try {
       const response = await api.get("/employee/available/salesperson", {
-        params: { dealershipId },
+        params: { companyId },
       })
 
       return response.data.data
@@ -494,7 +487,7 @@ export const dealService = {
       console.error("Error fetching salespersons", err)
     }
   },
-  AssignDealToFinManager: async (dealId: string, fiManagerId: string, dealershipId: string) => {
+  AssignDealToFinManager: async (dealId: string, fiManagerId: string, companyId: string) => {
     try {
       const response = await api.patch(
         "/finance/assignDeal",
@@ -502,7 +495,7 @@ export const dealService = {
           dealId,
           fiManagerId,
         },
-        { params: { dealershipId } }
+        { params: { companyId } }
       )
 
       return response.data
@@ -512,10 +505,10 @@ export const dealService = {
     }
   },
 
-  SendDealToRotation: async (dealId: string, dealershipId: string) => {
+  SendDealToRotation: async (dealId: string, companyId: string) => {
     try {
       const response = await api.post(
-        `/finance/dealAssignFinance/${dealId}?dealershipId=${dealershipId}`
+        `/finance/dealAssignFinance/${dealId}?companyId=${companyId}`
       )
       return response.data
     } catch (err) {
@@ -524,10 +517,10 @@ export const dealService = {
     }
   },
 
-  SetDealAsPriority: async (dealId: string, dealershipId: string) => {
+  SetDealAsPriority: async (dealId: string, companyId: string) => {
     try {
       const response = await api.post(
-        `/finance/setDealAsPriority/${dealId}?dealershipId=${dealershipId}`
+        `/finance/setDealAsPriority/${dealId}?companyId=${companyId}`
       )
 
       return response.data
@@ -537,9 +530,9 @@ export const dealService = {
     }
   },
 
-  getDealStatusHistory: async (dealId: string, dealershipId: string) => {
+  getDealStatusHistory: async (dealId: string, companyId: string) => {
     try {
-      const response = await api.get(`/deal/status-history/${dealId}`, { params: { dealershipId } })
+      const response = await api.get(`/deal/status-history/${dealId}`, { params: { companyId } })
       return response.data.data
     } catch (error) {
       console.error("Error fetching deal status history: ", error)
@@ -548,7 +541,7 @@ export const dealService = {
   },
   updateAccountingStatus: async (data: {
     dealId: string
-    dealershipId: string
+    companyId: string
     status: string
     comment: string
   }) => {
@@ -561,9 +554,9 @@ export const dealService = {
     }
   },
 
-  getDealsBySearch: async (search: string, dealershipId: string) => {
+  getDealsBySearch: async (search: string, companyId: string) => {
     try {
-      const response = await api.get(`/deal/search/${search}`, { params: { dealershipId } })
+      const response = await api.get(`/deal/search/${search}`, { params: { companyId } })
       return response.data.data
     } catch (error) {
       console.error("Error fetching deal(s) by search: ", error)
@@ -571,9 +564,9 @@ export const dealService = {
     }
   },
 
-  createDealDocumentType: async (docTypeName: string, dealershipId: string, companyId: string) => {
+  createDealDocumentType: async (docTypeName: string, companyId: string) => {
     try {
-      const response = await api.post(`/deal-doc/type?dealershipId=${dealershipId}`, {
+      const response = await api.post(`/deal-doc/type?companyId=${companyId}`, {
         docTypeName,
         companyId,
       })

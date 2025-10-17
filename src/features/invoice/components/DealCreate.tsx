@@ -31,7 +31,7 @@ const CreateDealForm: React.FC<Props> = ({}) => {
   });
 
   const { setCreatedDealId } = useDealStore();
-  const dealershipId: string = user!.dealershipId!.toString();
+  const companyId: string = user!.companyId!.toString();
   const [deal, setDeal] = useState<Deal | null>(null);
   const businessMonthMap = generateBusinessMonthMap(7);
   const salespersonOptions = useSalespersonOptions();
@@ -55,13 +55,13 @@ const CreateDealForm: React.FC<Props> = ({}) => {
 
   const fetchDealData = async (
     dealNo: string,
-    dealershipId: string,
+    companyId: string,
     token: string,
   ) => {
     try {
       const existingDealData = await dealService.fetchExistingDeal(
         dealNo,
-        dealershipId,
+        companyId,
         token,
       );
       if (existingDealData.status !== 500) {
@@ -70,7 +70,7 @@ const CreateDealForm: React.FC<Props> = ({}) => {
       }
       const result = await dealService.fetchDealData(
         dealNo,
-        dealershipId,
+        companyId,
         token,
       );
       return result;
@@ -82,14 +82,14 @@ const CreateDealForm: React.FC<Props> = ({}) => {
 
   const fetchSalespersonData = async (
     salespersonId: string,
-    dealershipId: string,
+    companyId: string,
     token: string,
   ) => {
     if (!salespersonId) return null;
     try {
       return await dealService.getRelaySalesperson(
         salespersonId,
-        dealershipId,
+        companyId,
         token,
       );
     } catch (error) {
@@ -103,15 +103,15 @@ const CreateDealForm: React.FC<Props> = ({}) => {
         setIsFetchingData(true);
         const result = await fetchDealData(
           dealershipDealNo,
-          dealershipId,
+            companyId,
           token ?? "",
         );
 
         setDeal(result);
 
         const [RelaySalesperson1, RelaySalesperson2] = await Promise.all([
-          fetchSalespersonData(result?.salesperson1, dealershipId, token ?? ""),
-          fetchSalespersonData(result?.salesperson2, dealershipId, token ?? ""),
+          fetchSalespersonData(result?.salesperson1, companyId, token ?? ""),
+          fetchSalespersonData(result?.salesperson2, companyId, token ?? ""),
         ]);
 
         if (result?.dealershipDealNo) {
@@ -136,7 +136,7 @@ const CreateDealForm: React.FC<Props> = ({}) => {
     () => {
       checkAndFetchDeal();
     },
-    [dealershipId, token, reset, dealershipDealNo],
+    [companyId, token, reset, dealershipDealNo],
     1000,
   );
 

@@ -5,8 +5,8 @@ import { dealService } from "../services/dealApi"
 import { IDealStatusHistoryResponse } from "@/core/entities/deal-status-history"
 import { routeOneService } from "@/features/invoice/services/routeOneApi"
 
-const fetchDeal = async (dealNo: string, dealershipId: string | undefined): Promise<Deal> => {
-  const { data } = await api.get(`/deal/dealNo/${dealNo}`, { params: { dealershipId } })
+const fetchDeal = async (dealNo: string, companyId: string | undefined): Promise<Deal> => {
+  const { data } = await api.get(`/deal/dealNo/${dealNo}`, { params: { companyId } })
   return data.data.data
 }
 
@@ -15,11 +15,11 @@ export interface IDealInAssignQueue {
 }
 
 const fetchDealInAssignQueue = async (
-  dealershipId: string | undefined,
+  companyId: string | undefined,
   dealId: string
 ): Promise<IDealInAssignQueue> => {
   const response = await api.get("/deal/exists-in-assign-queue/", {
-    params: { dealershipId, dealId },
+    params: { companyId, dealId },
   })
 
   return response.data?.data
@@ -32,23 +32,23 @@ type CommonQueryOptions<TData, TQueryKey extends QueryKey> = Omit<
 
 export const useDealDetail = (
   dealNo: string,
-  dealershipId: string | undefined,
+  companyId: string | undefined,
   options?: CommonQueryOptions<Deal, ["getDealByDealNo", string]>
 ) =>
   useQuery({
     queryKey: ["getDealByDealNo", dealNo],
-    queryFn: () => fetchDeal(dealNo, dealershipId),
+    queryFn: () => fetchDeal(dealNo, companyId),
     placeholderData: keepPreviousData,
     ...options,
   })
 
 export const useDocumentTypes = (
-  dealershipId: string,
+  companyId: string,
   options?: CommonQueryOptions<DocumentType[], ["getDocumentTypes", string]>
 ) => {
   return useQuery({
-    queryKey: ["getDocumentTypes", dealershipId],
-    queryFn: () => dealService.fetchDocumentTypes(dealershipId),
+    queryKey: ["getDocumentTypes", companyId],
+    queryFn: () => dealService.fetchDocumentTypes(companyId),
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 60,
     gcTime: 1000 * 60 * 60 * 3,
@@ -58,18 +58,18 @@ export const useDocumentTypes = (
 
 export const useDealDocuments = (
   dealId: string,
-  dealershipId: string,
+  companyId: string,
   options?: CommonQueryOptions<DealDocument[], ["getDealDocuments", string, string]>
 ) => {
   return useQuery({
-    queryKey: ["getDealDocuments", dealId, dealershipId],
-    queryFn: () => dealService.fetchDealDocuments(dealId, dealershipId),
+    queryKey: ["getDealDocuments", dealId, companyId],
+    queryFn: () => dealService.fetchDealDocuments(dealId, companyId),
     placeholderData: keepPreviousData,
   })
 }
 
 export const useDealInAssignQueue = (
-  dealershipId: string | undefined,
+  companyId: string | undefined,
   dealId: string | null,
   options?: UseQueryOptions<
     IDealInAssignQueue,
@@ -80,30 +80,30 @@ export const useDealInAssignQueue = (
 ) =>
   useQuery({
     queryKey: ["getDealInAssignQueue", dealId],
-    queryFn: () => fetchDealInAssignQueue(dealershipId, dealId),
+    queryFn: () => fetchDealInAssignQueue(companyId, dealId),
     enabled: options?.enabled,
     ...options,
   })
 
 export const useDealStatusHistory = (
   dealId: string,
-  dealershipId: string,
+  companyId: string,
   options?: CommonQueryOptions<
     IDealStatusHistoryResponse[],
     ["getDealStatusHistory", string, string]
   >
 ) => {
   return useQuery({
-    queryKey: ["getDealStatusHistory", dealId, dealershipId],
-    queryFn: () => dealService.getDealStatusHistory(dealId, dealershipId),
+    queryKey: ["getDealStatusHistory", dealId, companyId],
+    queryFn: () => dealService.getDealStatusHistory(dealId, companyId),
     placeholderData: keepPreviousData,
     ...options,
   })
 }
 
-export const useRouteOneByVin = (dealershipId: string| undefined, vin?: string) =>
+export const useRouteOneByVin = (companyId: string| undefined, vin?: string) =>
   useQuery({
     queryKey: ["getRouteOneByVin", vin],
-    queryFn: () => routeOneService.getRouteOneByVin(dealershipId, vin),
-    enabled: !!vin && !!dealershipId,
+    queryFn: () => routeOneService.getRouteOneByVin(companyId, vin),
+    enabled: !!vin && !!companyId,
   })

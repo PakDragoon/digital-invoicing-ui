@@ -20,11 +20,11 @@ interface ProductionResponse {
 
 export const getProductionData = async (
   id: string,
-  dealershipId: string,
+  companyId: string,
   token: string
 ): Promise<ProductionData> => {
   const response = await api.get<ProductionResponse>(
-    `/production/getProductionData?id=${id}&dealershipId=${dealershipId}`,
+    `/production/getProductionData?id=${id}&companyId=${companyId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -35,10 +35,10 @@ export const getProductionData = async (
   return response.data.data
 }
 
-export const useProductionData = (id: string, dealershipId: string, token: string) => {
+export const useProductionData = (id: string, companyId: string, token: string) => {
   return useQuery({
-    queryKey: ["productionData", id, dealershipId],
-    queryFn: () => getProductionData(id, dealershipId, token),
-    enabled: !!id && !!dealershipId && !!token,
+    queryKey: ["productionData", id, companyId],
+    queryFn: () => getProductionData(id, companyId, token),
+    enabled: !!id && !!companyId && !!token,
   })
 }

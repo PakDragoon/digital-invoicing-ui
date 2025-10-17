@@ -1,7 +1,6 @@
 export interface DealDocument {
   id: string
   companyId: string
-  dealershipId: string
   dealId: string
   docTypeId: string
   uploadDatetime: Date
@@ -16,7 +15,6 @@ export interface DealDocument {
 export interface IDealDocumentResponse {
   id: string
   companyId: string
-  dealershipId: string
   dealId: string
   docTypeId: string
   docTypeName: string

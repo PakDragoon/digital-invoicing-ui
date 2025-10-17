@@ -11,16 +11,16 @@ export interface Customer {
   
 }
 
-const fetchCustomers = async (dealershipId: string | number): Promise<Customer[]> => {
-  const response = await api.get(`/customer?dealershipId=${dealershipId}`)
+const fetchCustomers = async (companyId: string | number): Promise<Customer[]> => {
+  const response = await api.get(`/customer?companyId=${companyId}`)
   return response.data.data as Customer[]
 }
 
-export const useCustomers = (dealershipId: string | number, enabled = true) => {
+export const useCustomers = (companyId: string | number, enabled = true) => {
   return useQuery<Customer[]>({
-    queryKey: ["customers", dealershipId],
-    queryFn: () => fetchCustomers(dealershipId),
-    enabled: !!dealershipId && enabled,
+    queryKey: ["customers", companyId],
+    queryFn: () => fetchCustomers(companyId),
+    enabled: !!companyId && enabled,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   })

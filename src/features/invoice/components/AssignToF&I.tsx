@@ -23,7 +23,7 @@ interface Manager {
 export const AssignDealToFin = () => {
   const queryClient = useQueryClient()
   const { user } = useAuthStore.getState()
-  const dealershipId: string = user!.dealershipId!.toString()
+  const companyId: string = user!.companyId!.toString()
   const { createdDealId, showRotation, isReassign } = useDealStore()
   const { closeAssignDeal } = useModalStore()
   const [managers, setManagers] = useState<Manager[]>([])
@@ -34,7 +34,7 @@ export const AssignDealToFin = () => {
   useEffect(() => {
     const fetchManagers = async () => {
       try {
-        const response = await dealService.fetchManagers(dealershipId)
+        const response = await dealService.fetchManagers(companyId)
         setManagers(response ?? [])
       } catch (error) {
         console.error("Error fetching managers:", error)
@@ -42,7 +42,7 @@ export const AssignDealToFin = () => {
     }
 
     fetchManagers()
-  }, [dealershipId])
+  }, [companyId])
 
   const handleManagerSelect = (id: string) => {
     if (selectedManagerId === id) setSelectedManagerId(null)
@@ -90,7 +90,7 @@ export const AssignDealToFin = () => {
           dealService.AssignDealToFinManager(
             String(createdDealId),
             selectedManagerId,
-            dealershipId
+            companyId
           ),
       })
 
@@ -109,7 +109,7 @@ export const AssignDealToFin = () => {
     try {
       toggleDisableModalButton()
       await assignQueueMutation.mutateAsync({
-        fn: () => dealService.SendDealToRotation(createdDealId, dealershipId),
+        fn: () => dealService.SendDealToRotation(createdDealId, companyId),
       })
 
       setCurrentModal("dealCreated")
@@ -127,7 +127,7 @@ export const AssignDealToFin = () => {
     try {
       toggleDisableModalButton()
       await assignQueueMutation.mutateAsync({
-        fn: () => dealService.SetDealAsPriority(createdDealId, dealershipId),
+        fn: () => dealService.SetDealAsPriority(createdDealId, companyId),
       })
 
       setCurrentModal("dealCreated")

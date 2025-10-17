@@ -314,7 +314,7 @@ const DataTable: React.FC<DataTableProps> = ({
   const router = useRouter();
   const currentPath = router.state.location.pathname;
   const { user } = useAuthStore.getState();
-  const { data: salesPersonsList } = useGetSalesPersons(user?.dealershipId);
+  const { data: salesPersonsList } = useGetSalesPersons(user?.companyId);
   const {
     isTableRowEditOpen,
     closeTableRowEdit,
@@ -348,7 +348,6 @@ const DataTable: React.FC<DataTableProps> = ({
   const [isSettingsSaved, setIsSettingsSaved] = useState(false);
 
   const userId = user?.id ? BigInt(user.id) : undefined;
-  const dealershipId: string | undefined = user?.dealershipId?.toString();
   const companyId: string | undefined = user?.companyId?.toString();
   const headerName = getConstantNameByHeaders(headers);
 
@@ -359,7 +358,7 @@ const DataTable: React.FC<DataTableProps> = ({
   } = useTableConfig({
     userId: user?.id ?? "",
     headerKey: headerName ?? "",
-    dealershipId: dealershipId ?? "",
+    companyId: companyId ?? "",
     role: userRole,
   });
 
@@ -611,7 +610,7 @@ const DataTable: React.FC<DataTableProps> = ({
         return;
       }
 
-      await upsertTableConfig(userId, dealershipId, payload, userRole);
+      await upsertTableConfig(userId, companyId, payload, userRole);
       queryClient.invalidateQueries({ queryKey: ["tableConfig"] });
       toast.success("Table configuration saved successfully");
       await queryClient.invalidateQueries({ queryKey: ["tableConfig"] });
@@ -641,10 +640,9 @@ const DataTable: React.FC<DataTableProps> = ({
 
   const handleCSVUpload = (
     file: File,
-    dealershipId: string,
     companyId: string,
   ) => {
-    uploadCsv({ file, dealershipId, companyId });
+    uploadCsv({ file, companyId });
   };
   const handleFileInput = (
     e: React.ChangeEvent<HTMLInputElement>,

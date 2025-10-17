@@ -14,13 +14,13 @@ import { getTabName } from "@/common/utils/tabNameMapper";
 
 type TableComponentProps = {
   tabs: ITab[];
-  dealershipId: string;
+  companyId: string;
   tablePageName: string;
 };
 
 const Table: React.FC<TableComponentProps> = ({
   tabs,
-  dealershipId,
+  companyId,
   tablePageName,
 }) => {
   const userId = useAuthStore((state) => state.user?.id?.toString() ?? "");
@@ -82,7 +82,7 @@ const Table: React.FC<TableComponentProps> = ({
     limit,
     search,
     filters,
-    dealershipId,
+    companyId,
     salesType: selectedSalesType?.value,
     userId: getEffectiveUserId(),
     viewAsRole: getEffectiveRole(),
@@ -101,7 +101,6 @@ const Table: React.FC<TableComponentProps> = ({
   const empStatusQuery = useEmployeeStatus(
     user?.roleId,
     user?.companyId,
-    user?.dealershipId,
   );
   const statusNames =
     empStatusQuery.data?.data?.map((item: any) => item.statusName) ?? [];

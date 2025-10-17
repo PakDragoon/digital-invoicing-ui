@@ -1,7 +1,6 @@
 export interface MakeReadyEntity {
   id: bigint
   companyId: bigint
-  dealershipId: bigint
   dealId: bigint
   dateNeeded: Date | null
   assignedTo: bigint | null

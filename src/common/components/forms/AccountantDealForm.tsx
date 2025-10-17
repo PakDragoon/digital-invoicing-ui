@@ -40,8 +40,8 @@ const AccountantDealForm: React.FC<Props> = ({
 }) => {
   const { user } = useAuthStore.getState();
   const userRole = user?.role;
-  const dealershipId: string = useAuthStore(
-    (state) => state.user?.dealershipId?.toString() ?? "",
+  const companyId: string = useAuthStore(
+    (state) => state.user?.companyId?.toString() ?? "",
   );
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -56,7 +56,7 @@ const AccountantDealForm: React.FC<Props> = ({
     mode: "onChange",
     defaultValues: initialFormData,
   });
-  const { data } = useDealDocuments(dealId, dealershipId);
+  const { data } = useDealDocuments(dealId, companyId);
   const dealDocuments = data || [];
   const formSections = [{ title: "Deal Information", fields: dealFields }];
 

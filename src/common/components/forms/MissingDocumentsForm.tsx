@@ -26,7 +26,7 @@ const MissingDocumentsForm: React.FC<Props> = ({
   handleSubmit: submitHandler,
   dealDocuments = [],
 }) => {
-  const dealershipId: string = useAuthStore((state) => state.user?.dealershipId?.toString() ?? "")
+  const companyId: string = useAuthStore((state) => state.user?.companyId?.toString() ?? "")
   const {
     control,
     handleSubmit,
@@ -37,7 +37,7 @@ const MissingDocumentsForm: React.FC<Props> = ({
     mode: "onChange",
     defaultValues: { documents: [] },
   })
-  const { data, isLoading, isError } = useDocumentTypes(dealershipId)
+  const { data, isLoading, isError } = useDocumentTypes(companyId)
 
   const receivedDocuments = new Set(
     dealDocuments?.filter((doc) => doc.isReceived).map((doc) => doc.docTypeId)

@@ -1,7 +1,6 @@
 export interface Plate {
   id: string
   companyId: string
-  dealershipId: string
   dealId: string
   dealVehicleId: string
   plateNumber: string
