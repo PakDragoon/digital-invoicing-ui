@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import CustomButton from "@/common/components/buttons/CustomButton";
 import { toast } from "react-toastify";
+import { fbrApiService, FBRInvoiceData } from "../services/fbrApi";
 
 // Invoice form validation schema
 const invoiceSchema = z.object({
@@ -58,6 +59,7 @@ const InvoiceCreate: React.FC = () => {
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<InvoiceFormData>({
     resolver: zodResolver(invoiceSchema),
@@ -97,13 +99,32 @@ const InvoiceCreate: React.FC = () => {
 
   const onSubmit = async (data: InvoiceFormData) => {
     setIsSubmitting(true);
+    
     try {
-      console.log("Invoice data:", data);
-      // Here you would typically send the data to your API
-      toast.success("Invoice created successfully!");
+      // Validate the data before submission
+      const validation = fbrApiService.validateInvoiceData(data);
+      if (!validation.isValid) {
+        toast.error("Please fix the following errors:");
+        validation.errors.forEach(error => toast.error(error));
+        return;
+      }
+
+      // Submit to FBR API
+      const response = await fbrApiService.submitInvoiceData(data);
+      
+      if (response.success) {
+        toast.success("Invoice submitted to FBR successfully!");
+        // Reset form after successful submission
+        reset();
+      } else {
+        toast.error(response.message || "Failed to submit invoice to FBR");
+        if (response.errors && response.errors.length > 0) {
+          response.errors.forEach(error => toast.error(error));
+        }
+      }
     } catch (error) {
-      console.error("Error creating invoice:", error);
-      toast.error("Failed to create invoice. Please try again.");
+      console.error("Error submitting invoice to FBR:", error);
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -592,7 +613,7 @@ const InvoiceCreate: React.FC = () => {
         {/* Submit Button */}
         <div className="border-t pt-6 flex justify-end">
           <CustomButton
-            text={isSubmitting ? "Creating Invoice..." : "Submit Invoice"}
+            text={isSubmitting ? "Submitting to FBR..." : "Submit to FBR"}
             variant="contained"
             type="submit"
             disabled={isSubmitting}
